@@ -1,0 +1,554 @@
+/*
+ * Amber demo layout
+ * --------------------------------------------------
+ * A sidebar and top bar shell around the demo pages. The brand purple drives
+ * Bootstrap's primary color and the Larajax UI accents; the sidebar and link
+ * text use a deeper shade so white and body text stay readable.
+ */
+
+:root {
+    --amber-brand: #6a6cf7;
+    --amber-brand-rgb: 106, 108, 247;
+    --amber-brand-hover: #5557e6;
+    --amber-brand-deep: #4f51d9;
+    --amber-brand-deep-rgb: 79, 81, 217;
+    --amber-brand-tint: #f0f0fe;
+    --amber-brand-soft: #e1e2fd;
+    --amber-accent: #c7c8ff;
+
+    --amber-canvas: #f7f7fb;
+    --amber-surface: #ffffff;
+    --amber-border: #e3e3ef;
+    --amber-text: #1f2033;
+    --amber-muted: #6b6d85;
+    --amber-sidebar-bg: var(--amber-brand-deep);
+    --amber-sidebar-text: #ffffff;
+    --amber-focus-ring: rgba(var(--amber-brand-rgb), 0.25);
+
+    /* Bootstrap's primary set, derived from the brand the same way Bootstrap derives it from a palette step */
+    --bs-primary-base: var(--amber-brand);
+    --bs-primary-fg: light-dark(var(--amber-brand-deep), #a5a6ff);
+    --bs-primary-fg-emphasis: light-dark(color-mix(in oklch, var(--bs-black) 48%, var(--amber-brand)), color-mix(in oklch, var(--bs-white) 60%, var(--amber-brand)));
+    --bs-primary-bg: var(--amber-brand);
+    --bs-primary-bg-subtle: light-dark(color-mix(in oklch, var(--bs-white) 80%, var(--amber-brand)), color-mix(in oklch, var(--bs-black) 64%, var(--amber-brand)));
+    --bs-primary-bg-muted: light-dark(color-mix(in oklch, var(--bs-white) 60%, var(--amber-brand)), color-mix(in oklch, var(--bs-black) 48%, var(--amber-brand)));
+    --bs-primary-border: light-dark(color-mix(in oklch, var(--bs-white) 40%, var(--amber-brand)), color-mix(in oklch, var(--bs-black) 16%, var(--amber-brand)));
+    --bs-primary-focus-ring: light-dark(color-mix(in oklch, var(--amber-brand) 50%, var(--bs-bg-body)), color-mix(in oklch, var(--amber-brand) 75%, var(--bs-bg-body)));
+    --bs-primary-contrast: var(--bs-white);
+    --bs-link-color: var(--bs-primary-fg);
+    --bs-link-hover-color: light-dark(var(--amber-brand-hover), var(--amber-accent));
+
+    --oc-accent: var(--amber-brand);
+    --oc-selection: var(--amber-brand);
+}
+
+[data-bs-theme="dark"] {
+    --amber-brand-tint: rgba(var(--amber-brand-rgb), 0.14);
+    --amber-brand-soft: rgba(var(--amber-brand-rgb), 0.28);
+    --amber-canvas: #121219;
+    --amber-surface: #1b1b25;
+    --amber-border: #2c2d3d;
+    --amber-text: #e6e6f0;
+    --amber-muted: #9a9bb3;
+    --amber-sidebar-bg: #25265f;
+}
+
+/*
+ * Shell
+ */
+
+.amber-layout {
+    min-height: 100%;
+    margin: 0;
+    background: var(--amber-canvas);
+    color: var(--amber-text);
+
+    .app-shell {
+        display: grid;
+        grid-template-columns: 264px minmax(0, 1fr);
+        grid-template-rows: 72px minmax(0, 1fr);
+        min-height: 100vh;
+    }
+
+    .app-main {
+        grid-column: 2;
+        grid-row: 2;
+        min-width: 0;
+        min-height: 0;
+        padding: 32px;
+
+        > h1:first-child {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+    }
+
+    .icon-button {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--amber-muted);
+
+        .ph {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        &:hover,
+        &:focus-visible {
+            background: var(--amber-brand-tint);
+            color: var(--amber-brand);
+            outline: 0;
+        }
+
+        &:focus-visible {
+            box-shadow: 0 0 0 3px var(--amber-focus-ring);
+        }
+    }
+
+    .sidebar-close,
+    .topbar-menu,
+    .topbar-brand,
+    .sidebar-scrim {
+        display: none;
+    }
+}
+
+/*
+ * Page content
+ */
+
+/* Spacing lives here because the library's unlayered form-group padding outranks Bootstrap 6 utilities */
+.amber-layout .form-group.ruler-field {
+    margin-block: 0.5rem;
+    padding-bottom: 1rem;
+}
+
+/*
+ * Brand
+ */
+
+.amber-layout .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 6px;
+        border-radius: 6px;
+    }
+
+    .brand-mark {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--amber-brand);
+        color: #ffffff;
+        font-size: 20px;
+    }
+
+    .brand-lockup {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+    }
+
+    .brand-name {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    .brand-product {
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        opacity: 0.75;
+    }
+}
+
+/*
+ * Sidebar
+ */
+
+.amber-layout .sidebar {
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--amber-sidebar-bg);
+    color: var(--amber-sidebar-text);
+
+    .sidebar-brand-row {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 72px;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+
+        .brand-mark {
+            background: rgba(255, 255, 255, 0.16);
+        }
+    }
+
+    .sidebar-close {
+        color: var(--amber-sidebar-text);
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(255, 255, 255, 0.14);
+            color: var(--amber-sidebar-text);
+        }
+    }
+
+    .sidebar-nav {
+        flex: 1 1 auto;
+        padding: 20px 12px;
+    }
+
+    .sidebar-nav-list,
+    .sidebar-nav-children {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .sidebar-nav-item + .sidebar-nav-item {
+        margin-top: 4px;
+    }
+
+    .sidebar-nav-children {
+        display: none;
+        margin: 4px 0 0 22px;
+        padding-left: 10px;
+        border-left: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .sidebar-nav-item.show > .sidebar-nav-children {
+        display: block;
+    }
+
+    .sidebar-nav-child + .sidebar-nav-child {
+        margin-top: 2px;
+    }
+
+    .sidebar-nav-link {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 44px;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--amber-sidebar-text);
+        font-size: 15px;
+        line-height: 1.4;
+        text-align: left;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--amber-sidebar-text);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--amber-sidebar-text);
+            outline-offset: 2px;
+        }
+    }
+
+    .sidebar-nav-link-child {
+        min-height: 38px;
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .sidebar-nav-group {
+        gap: 0;
+        padding: 0;
+    }
+
+    .sidebar-nav-group-link {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        min-width: 0;
+        min-height: 44px;
+        gap: 12px;
+        padding: 10px 0 10px 12px;
+        border-radius: 8px;
+        color: inherit;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            color: inherit;
+            outline: 0;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--amber-sidebar-text);
+            outline-offset: -2px;
+        }
+    }
+
+    .sidebar-nav-group-toggle {
+        display: inline-flex;
+        flex: 0 0 40px;
+        align-self: stretch;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        border-radius: 0 8px 8px 0;
+        background: transparent;
+        color: inherit;
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(255, 255, 255, 0.12);
+            outline: 0;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--amber-sidebar-text);
+            outline-offset: -2px;
+        }
+    }
+
+    .sidebar-nav-item.active > .sidebar-nav-link,
+    .sidebar-nav-child.active > .sidebar-nav-link {
+        background: rgba(255, 255, 255, 0.16);
+        box-shadow: inset 3px 0 0 var(--amber-accent);
+    }
+
+    .sidebar-nav-icon {
+        flex: 0 0 22px;
+        width: 22px;
+        font-size: 22px;
+        line-height: 1;
+    }
+
+    .sidebar-nav-link-child .sidebar-nav-icon {
+        flex-basis: 18px;
+        width: 18px;
+        font-size: 18px;
+    }
+
+    .sidebar-nav-label {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .sidebar-nav-chevron {
+        font-size: 16px;
+        line-height: 1;
+        transition: transform 0.2s ease;
+    }
+
+    .sidebar-nav-item:not(.show) .sidebar-nav-chevron {
+        transform: rotate(180deg);
+    }
+
+    .sidebar-nav-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 6px;
+        margin-left: auto;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 12px;
+        line-height: 1;
+    }
+
+    .sidebar-support {
+        padding: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+}
+
+/*
+ * Top bar
+ */
+
+.amber-layout .topbar {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    padding: 0 32px;
+    background: var(--amber-surface);
+    border-bottom: 1px solid var(--amber-border);
+
+    .search {
+        position: relative;
+        flex: 1 1 520px;
+        max-width: 520px;
+        min-width: 0;
+    }
+
+    .search-input {
+        width: 100%;
+        height: 40px;
+        padding: 0 44px 0 14px;
+        border-color: var(--amber-border);
+        border-radius: 8px;
+        background: var(--amber-canvas);
+        box-shadow: none;
+        font-size: 14px;
+
+        &::placeholder {
+            color: var(--amber-muted);
+        }
+    }
+
+    .search-button {
+        position: absolute;
+        top: 50%;
+        right: 2px;
+        width: 36px;
+        height: 36px;
+        transform: translateY(-50%);
+    }
+
+    .topbar-actions {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+    }
+
+    .theme-toggle {
+        .theme-icon-dark {
+            display: none;
+        }
+    }
+}
+
+[data-bs-theme="dark"] .amber-layout .topbar .theme-toggle {
+    .theme-icon-light {
+        display: none;
+    }
+
+    .theme-icon-dark {
+        display: inline-block;
+    }
+}
+
+/*
+ * Tablet and mobile: below Bootstrap's lg breakpoint the sidebar slides in over the page
+ */
+
+@media (width < 1024px) {
+    .amber-layout {
+        .app-shell {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: auto minmax(0, 1fr);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: var(--bs-z-drawer);
+            width: min(300px, 88vw);
+            min-height: 100dvh;
+            overflow-y: auto;
+            visibility: hidden;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease, visibility 0.25s;
+        }
+
+        .sidebar-scrim {
+            position: fixed;
+            inset: 0;
+            z-index: calc(var(--bs-z-drawer) - 1);
+            display: block;
+            border: 0;
+            background: rgba(var(--amber-brand-deep-rgb), 0.4);
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s;
+        }
+
+        &.sidebar-open {
+            overflow: hidden;
+
+            .sidebar {
+                visibility: visible;
+                transform: translateX(0);
+            }
+
+            .sidebar-scrim {
+                visibility: visible;
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+
+        .sidebar-close,
+        .topbar-menu,
+        .topbar-brand {
+            display: inline-flex;
+        }
+
+        .topbar {
+            grid-column: 1;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 16px;
+
+            .search {
+                order: 3;
+                flex-basis: 100%;
+                max-width: none;
+            }
+        }
+
+        .app-main {
+            grid-column: 1;
+            padding: 24px 16px;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .amber-layout {
+        .sidebar,
+        .sidebar-scrim,
+        .sidebar-nav-link,
+        .sidebar-nav-chevron {
+            transition: none;
+        }
+    }
+}

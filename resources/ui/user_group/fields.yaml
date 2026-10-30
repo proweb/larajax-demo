@@ -1,0 +1,47 @@
+# ===================================
+#  User Group Form Field Definitions
+# ===================================
+
+fields:
+
+    name:
+        label: Name
+        span: left
+
+    code:
+        label: Code
+        span: right
+        comment: A unique machine-readable identifier, e.g. "editors".
+
+    description:
+        label: Description
+        comment: Written in Markdown.
+        type: markdown
+        size: small
+        span: full
+
+    logo:
+        label: Logo
+        type: fileupload
+        mode: image
+        imageWidth: 120
+        imageHeight: 120
+        fileTypes: jpg,jpeg,png,gif,webp
+        deferredBinding: false
+        span: left
+        context: update
+
+    documents:
+        label: Documents
+        type: fileupload
+        mode: file
+        deferredBinding: false
+        span: right
+        context: update
+
+    users:
+        label: Members
+        type: taglist
+        nameFrom: name
+        placeholder: Add members
+        context: [create, update]

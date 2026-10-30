@@ -1,0 +1,24 @@
+# ===================================
+#  User Group List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+        sortable: true
+
+    name:
+        label: Name
+        searchable: true
+        sortable: true
+
+    code:
+        label: Code
+        searchable: true
+        sortable: true
+
+    created_at:
+        label: Created
+        type: datetime
+        sortable: true

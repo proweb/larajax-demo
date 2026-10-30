@@ -1,0 +1,24 @@
+# ===================================
+#  Toolbar Button Definitions
+# ===================================
+
+buttons:
+    create:
+        label: New User
+        icon: ph ph-plus
+        type: primary
+        url: users/create
+
+    reorder:
+        label: Reorder
+        icon: ph ph-dots-six-vertical
+        type: secondary
+        url: users/structure
+
+    delete:
+        label: Delete
+        icon: action.delete
+        type: danger
+        handler: onDelete
+        confirm: Delete the selected users?
+        checked: true

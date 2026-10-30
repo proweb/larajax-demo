@@ -1,0 +1,37 @@
+# ===================================
+#  User Filter Scope Definitions
+# ===================================
+
+scopes:
+    verified:
+        label: Verified
+        type: checkbox
+        conditions: email_verified_at is not null
+
+    domain:
+        label: Email Domain
+        type: dropdown
+        emptyOption: All Domains
+        modelScope: applyDomain
+        options:
+            example.com: Example.com
+            example.org: Example.org
+            example.net: Example.net
+
+    id:
+        label: ID
+        type: number
+
+    email:
+        label: Email
+        type: text
+
+    created_at:
+        label: Created
+        type: date
+
+    name:
+        label: Name
+        type: group
+        optionsMethod: 'App\Models\User::getNameGroupOptions'
+        dependsOn: domain

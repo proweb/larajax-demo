@@ -1,0 +1,165 @@
+# ===================================
+#  User Form Field Definitions
+# ===================================
+
+fields:
+
+    name:
+        label: Name
+        span: auto
+
+tabs:
+    fields:
+        email:
+            label: Email
+            tab: Account
+            span: full
+
+        email_verified_at:
+            label: Email Verified
+            comment: Leave blank while the address is unverified.
+            tab: Account
+            type: datepicker
+            span: left
+
+        send_invite:
+            type: checkbox
+            label: Send invitation by email
+            comment: Sends a welcome message containing login and password information.
+            tab: Account
+            default: true
+            context: create
+
+        is_mail_blocked:
+            label: Block all outgoing mail sent to this user
+            tab: Account
+            type: checkbox
+            span: full
+            cssClass: field-align-above
+            context: update
+
+        _password_ruler:
+            type: ruler
+            tab: Account
+
+        password@create:
+            label: Create Password
+            commentAbove: Enter a password used for signing in.
+            tab: Account
+            type: password
+            span: left
+
+        password@update:
+            label: Reset Password
+            commentAbove: To reset this user's password, enter a new password here. Leave blank to keep the current one.
+            tab: Account
+            type: password
+            span: left
+
+        password_confirmation:
+            label: Password Confirmation
+            commentAbove: Enter the password again to confirm it.
+            tab: Account
+            type: password
+            span: right
+            context: [create, update]
+
+        is_two_factor_enabled:
+            label: Two-factor authentication is enabled
+            tab: Account
+            type: checkbox
+            span: full
+            cssClass: field-align-above
+            context: update
+
+        _group_ruler:
+            type: ruler
+            tab: Account
+
+        primary_group:
+            label: Primary Group
+            tab: Account
+            type: relation
+            scope: withoutGuest
+            quickCreate: ~/resources/ui/user_group/fields.yaml
+
+        groups:
+            label: Secondary Groups
+            tab: Account
+            type: relation
+            emptyOption: There are no user groups available.
+            scope: withoutGuest
+
+        notes:
+            label: Notes
+            type: richeditor
+            size: small
+            toolbarButtons: [paragraphFormat, bold, italic, underline, '|', formatOL, formatUL, '|', insertLink, insertImage, insertFile, insertTable, '|', html]
+            uploadDisk: public
+
+        links:
+            label: Links
+            tab: Profile
+            type: repeater
+            titleFrom: title
+            prompt: Add Link
+            showReorder: true
+            showDuplicate: true
+            form:
+                fields:
+                    title:
+                        label: Title
+                        span: auto
+                    url:
+                        label: URL
+                        span: auto
+
+        contacts:
+            label: Contacts
+            tab: Profile
+            type: datatable
+            comment: The city list follows the country picked in the same row.
+            searching: true
+            csvExport: true
+            csvImport: true
+            requireValid: true
+            columns:
+                name:
+                    title: Name
+                email:
+                    title: Email
+                    validation:
+                        required:
+                            message: Enter an email address.
+                        regex:
+                            pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$'
+                            message: Enter a valid email address.
+                type:
+                    title: Type
+                    type: dropdown
+                    width: 110px
+                    options:
+                        work: Work
+                        personal: Personal
+                        billing: Billing
+                country:
+                    title: Country
+                    type: dropdown
+                    width: 140px
+                    options:
+                        au: Australia
+                        nz: New Zealand
+                        us: United States
+                city:
+                    title: City
+                    type: dropdown
+                    dependsOn: country
+                    width: 130px
+                primary:
+                    title: Primary
+                    type: checkbox
+                    width: 80px
+                since:
+                    title: Since
+                    type: date
+                    width: 130px
