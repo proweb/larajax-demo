@@ -22,6 +22,3 @@ buttons:
         type: danger
         confirm: Delete the selected courses?
         checked: true
-</think>
-
-"
