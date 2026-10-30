@@ -1,0 +1,27 @@
+# ===================================
+#  Toolbar Button Definitions
+# ===================================
+
+buttons:
+
+    create:
+        label: New Course
+        icon: ph ph-plus
+        type: primary
+        url: courses/create
+
+    reorder:
+        label: Reorder
+        icon: ph ph-dots-six-vertical
+        type: secondary
+        url: courses/structure
+
+    delete:
+        label: Delete
+        icon: action.delete
+        type: danger
+        confirm: Delete the selected courses?
+        checked: true
+</think>
+
+"

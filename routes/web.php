@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\CoursesController;
 use App\Controllers\UserGroupsController;
 use App\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,17 @@ Route::match(['get', 'post'], '/users/{user}/edit', [UsersController::class, 'ed
 Route::match(['get', 'post'], '/user-groups', [UserGroupsController::class, 'index'])->name('user-groups.index');
 Route::match(['get', 'post'], '/user-groups/create', [UserGroupsController::class, 'create'])->name('user-groups.create');
 Route::match(['get', 'post'], '/user-groups/{userGroup}/edit', [UserGroupsController::class, 'edit'])->name('user-groups.edit');
+
+/*
+|--------------------------------------------------------------------------
+| Courses
+|--------------------------------------------------------------------------
+|
+| A simple CRUD resource (list + form + reorder) with title, description,
+| and price fields — same widget pattern as Users but without relations.
+|
+*/
+Route::match(['get', 'post'], '/courses', [CoursesController::class, 'index'])->name('courses.index');
+Route::match(['get', 'post'], '/courses/structure', [CoursesController::class, 'structure'])->name('courses.structure');
+Route::match(['get', 'post'], '/courses/create', [CoursesController::class, 'create'])->name('courses.create');
+Route::match(['get', 'post'], '/courses/{course}/edit', [CoursesController::class, 'edit'])->name('courses.edit');

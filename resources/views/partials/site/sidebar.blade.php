@@ -21,6 +21,26 @@
             ],
         ],
         [
+            'label' => 'Courses',
+            'icon' => 'ph-graduation-cap',
+            'href' => url('courses'),
+            'active' => request()->is('courses', 'courses/*') && ! request()->is('courses/structure', 'courses/create'),
+            'children' => [
+                [
+                    'label' => 'Structure',
+                    'icon' => 'ph-tree-structure',
+                    'href' => url('courses/structure'),
+                    'active' => request()->is('courses/structure'),
+                ],
+                [
+                    'label' => 'New Course',
+                    'icon' => 'ph-plus-circle',
+                    'href' => url('courses/create'),
+                    'active' => request()->is('courses/create'),
+                ],
+            ],
+        ],
+        [
             'label' => 'Groups',
             'icon' => 'ph-users-three',
             'href' => url('user-groups'),

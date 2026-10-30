@@ -1,0 +1,24 @@
+# ===================================
+#  Course List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+        sortable: true
+
+    title:
+        label: Title
+        searchable: true
+        sortable: true
+
+    price:
+        label: Price
+        type: currency
+        sortable: true
+
+    created_at:
+        label: Created
+        type: datetime
+        sortable: true
