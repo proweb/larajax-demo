@@ -57,10 +57,20 @@ class LayoutTest extends TestCase
         User::factory()->create(['name' => 'Zelda Quartermaine']);
         User::factory()->create(['name' => 'Bob Ordinary']);
 
-        $this->get('users?q=Zelda')
+        $html = $this->get('users?q=Zelda')
             ->assertOk()
-            ->assertSee('Zelda Quartermaine')
-            ->assertDontSee('Bob Ordinary')
-            ->assertSee('value="Zelda"', false);
+            ->assertSee('value="Zelda"', false)
+            ->getContent();
+
+        // The list shows only the matching record. The name's group filter scope
+        // still offers every name as an option, so check the list rows, not the page.
+        $this->assertTrue(
+            (bool) preg_match('/<table class="table data" data-control="rowlink">.*?<tbody>(.*?)<\/tbody>/s', $html, $matches),
+            'list table not found in the page'
+        );
+        $rows = $matches[1];
+
+        $this->assertStringContainsString('Zelda Quartermaine', $rows);
+        $this->assertStringNotContainsString('Bob Ordinary', $rows);
     }
 }

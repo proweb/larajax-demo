@@ -97,14 +97,20 @@ class RichEditorTest extends TestCase
         $this->assertSame('<p>Hello <strong>there</strong></p>', $widget->getSaveValue('<p>Hello <strong>there</strong></p>'));
     }
 
-    public function test_the_field_passes_icon_pack_classes_and_translated_strings(): void
+    public function test_the_field_passes_icon_pack_classes_and_the_language(): void
     {
+        // English is the controls' default, so no language attribute renders for it
         $html = (string) $this->makeEditorForm(User::factory()->create())->render();
 
         $this->assertStringContainsString('data-icons="{&quot;bold&quot;:&quot;ph ph-text-b&quot;,', $html);
         $this->assertStringContainsString('&quot;snippet&quot;:&quot;ph ph-newspaper&quot;}"', $html);
-        $this->assertStringContainsString('data-lang="{&quot;toolbar&quot;:&quot;Editor toolbar&quot;,', $html);
-        $this->assertStringContainsString('&quot;formatHeading1&quot;:&quot;Heading 1&quot;', $html);
+        $this->assertStringNotContainsString('data-language', $html);
+
+        // A locale with a language asset renders its code, the strings load from the asset
+        app()->setLocale('ru');
+        $ru = (string) $this->makeEditorForm(User::factory()->create())->render();
+
+        $this->assertStringContainsString('data-language="ru"', $ru);
     }
 
     public function test_the_built_in_upload_is_offered_only_with_an_upload_disk(): void

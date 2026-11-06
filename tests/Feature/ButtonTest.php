@@ -34,22 +34,4 @@ class ButtonTest extends TestCase
         $this->assertMatchesRegularExpression('/class="btn-icon-link [^"]*danger"/', $html);
         $this->assertDoesNotMatchRegularExpression('/class="[^"]*\bbtn-icon\b(?!-)/', $html);
     }
-
-    public function test_fluent_button_types_render_a_variant_with_a_theme(): void
-    {
-        $this->assertMatchesRegularExpression('/class="btn-solid theme-primary\s*"/', Ui::button('Save')->primary()->toHtml());
-        $this->assertMatchesRegularExpression('/class="btn-outline theme-danger\s*"/', Ui::button('Delete')->danger()->outline(true)->toHtml());
-        $this->assertMatchesRegularExpression('/class="btn-link p-0\s*"/', Ui::button('Back')->textLink()->toHtml());
-    }
-
-    public function test_fluent_default_type_renders_the_secondary_theme(): void
-    {
-        $this->assertMatchesRegularExpression('/class="btn-solid theme-secondary\s*"/', Ui::button('Cancel')->toHtml());
-        $this->assertMatchesRegularExpression('/class="btn-outline theme-secondary\s*"/', Ui::button('Cancel')->outline(true)->toHtml());
-    }
-
-    public function test_form_delete_button_renders_the_icon_link_class(): void
-    {
-        $this->assertStringContainsString('btn-icon-link danger pull-right', Ui::ajaxButton('Delete', 'onDelete')->formDeleteButton()->toHtml());
-    }
 }

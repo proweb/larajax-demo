@@ -6,22 +6,44 @@ use App\Models\File;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Testing\TestResponse;
+use Larajax\Ui\Classes\HeldUploads;
 use Tests\TestCase;
 
 class FileUploadTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * setUp stores the uploads on a fake public disk.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Storage::fake('public');
+    }
+
     protected function tearDown(): void
     {
-        // Rain removes the stored files with their records, which the rollback alone would leave behind
+        // The File model removes the stored files with their records, which the rollback alone would leave behind
         File::all()->each->delete();
 
         parent::tearDown();
     }
 
-    protected function ajax(string $handler, UserGroup $group, array $data = [])
+    /**
+     * ajax posts one AJAX handler request to the group's edit page.
+     */
+    protected function ajax(string $handler, UserGroup $group, array $data = []): TestResponse
     {
+        // Laravel keeps the route's controller across a test's requests, and the controller keeps its first AJAX handler
+        app('router')->getRoutes()->getByName('user-groups.edit')->flushController();
+
+        // Upload fields register with the request's held uploads, which a test's requests would otherwise share
+        app()->forgetInstance(HeldUploads::class);
+
         return $this->withHeaders([
             'X-AJAX-HANDLER' => $handler,
             'X-Requested-With' => 'XMLHttpRequest',
@@ -29,6 +51,20 @@ class FileUploadTest extends TestCase
             'name' => $group->name,
             'code' => $group->code,
         ]);
+    }
+
+    /**
+     * attachDocuments stores files on the group directly, since a test reuses its first
+     * AJAX handler for later requests to the same route.
+     */
+    protected function attachDocuments(UserGroup $group, array $names): array
+    {
+        return array_map(function ($name) use ($group) {
+            $file = $group->documents()->make()->fromPost(UploadedFile::fake()->create($name, 1));
+            $file->save();
+
+            return $file->id;
+        }, $names);
     }
 
     public function test_the_group_form_renders_a_single_logo_and_multiple_documents(): void
@@ -64,7 +100,7 @@ class FileUploadTest extends TestCase
         $this->assertSame('logo.png', $logo->file_name);
         $this->assertSame($logo->id, $response->json('id'));
         $this->assertStringContainsString('/storage/uploads/public/', $response->json('path'));
-        $this->assertFileExists($logo->getLocalPath());
+        Storage::disk('public')->assertExists($logo->getDiskPath());
     }
 
     public function test_uploads_of_other_file_types_are_refused(): void
@@ -76,22 +112,6 @@ class FileUploadTest extends TestCase
         ])->assertStatus(400);
 
         $this->assertNull($group->fresh()->logo);
-    }
-
-    /**
-     * attachDocuments stores files on the group directly, since a test reuses its first
-     * AJAX handler for later requests to the same route.
-     */
-    protected function attachDocuments(UserGroup $group, array $names): array
-    {
-        return array_map(function ($name) use ($group) {
-            $file = new File;
-            $file->data = UploadedFile::fake()->create($name, 1);
-            $file->save();
-            $group->documents()->add($file);
-
-            return $file->id;
-        }, $names);
     }
 
     public function test_sorting_orders_the_documents(): void
@@ -114,18 +134,22 @@ class FileUploadTest extends TestCase
 
         $this->ajax('formDocuments::onRemoveAttachment', $group, ['file_id' => $first, '_session_key' => 'session-1'])->assertOk();
 
-        $this->assertSame(['notes.txt'], $group->documents()->withDeferred('session-1')->pluck('file_name')->all());
+        // The removal is held in the session, so the file stays attached until the record saves
         $this->assertSame(['agenda.txt', 'notes.txt'], $group->fresh()->documents->pluck('file_name')->all());
+        $this->assertNotNull(File::find($first));
     }
 
     public function test_saving_the_form_commits_a_removed_document(): void
     {
         $group = UserGroup::factory()->create(['code' => 'editors']);
         [$first] = $this->attachDocuments($group, ['agenda.txt', 'notes.txt']);
-        $group->documents()->remove(File::find($first), 'session-1');
+        $agenda = File::find($first);
 
+        $this->ajax('formDocuments::onRemoveAttachment', $group, ['file_id' => $first, '_session_key' => 'session-1'])->assertOk();
         $this->ajax('onUpdate', $group, ['_session_key' => 'session-1'])->assertOk();
 
         $this->assertSame(['notes.txt'], $group->fresh()->documents->pluck('file_name')->all());
+        $this->assertNull(File::find($first));
+        Storage::disk('public')->assertMissing($agenda->getDiskPath());
     }
 }

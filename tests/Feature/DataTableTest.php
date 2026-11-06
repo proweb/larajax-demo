@@ -93,7 +93,6 @@ class DataTableTest extends TestCase
 
         $this->assertSame(['city'], $this->attributeJson($html, 'data-ajax-columns'));
         $this->assertSame(['city' => 'country'], $this->attributeJson($html, 'data-column-dependencies'));
-        $this->assertSame('Remove row', $this->attributeJson($html, 'data-lang')['removeRow']);
 
         $columns = collect($this->attributeJson($html, 'data-columns'))->keyBy('data');
         $this->assertSame(['name', 'email', 'type', 'country', 'city', 'primary', 'since'], $columns->keys()->all());
@@ -350,12 +349,17 @@ class DataTableTest extends TestCase
 
     public function test_the_validation_messages_pass_through_the_translator(): void
     {
-        $html = (string) $this->makeTableForm(User::factory()->create())->render();
-        $lang = $this->attributeJson($html, 'data-lang');
+        // The rule messages moved out of the field's data-lang attribute into the
+        // per-language asset the page loads, picked by the app locale
+        app()->setLocale('ru');
 
-        $this->assertSame('The value should not be empty.', $lang['ruleRequired']);
-        $this->assertSame('The value should not be more than :max', $lang['ruleMax']);
-        $this->assertSame('Invalid value format.', $lang['ruleRegex']);
+        $html = (string) $this->makeTableForm(User::factory()->create())->render();
+
+        $this->assertStringContainsString('data-language="ru"', $html);
+
+        $language = file_get_contents(\Larajax\Ui\Helpers\Language::path('ru'));
+        $this->assertStringContainsString("ruleRequired: 'Значение не должно быть пустым.'", $language);
+        $this->assertStringContainsString("ruleMax: 'Значение не должно быть больше :max.'", $language);
     }
 
     public function test_csv_export_downloads_the_posted_rows_under_the_column_titles(): void

@@ -116,23 +116,17 @@ class FilterTest extends TestCase
         $this->assertNull($store['scope-name']);
     }
 
-    public function test_preloading_returns_the_popover_form_of_each_widget_scope(): void
+    public function test_the_widget_scope_forms_are_inlined_for_the_popover(): void
     {
-        $resp = $this->withHeaders([
-            'X-AJAX-HANDLER' => 'filter::onFilterUpdate',
-            'X-Requested-With' => 'XMLHttpRequest',
-        ])->post('users', [
-            'preload' => 'true',
-        ]);
+        // The widget scopes' forms are rendered into the page as scope-form templates,
+        // which the filter's popover fills in without a preload request
+        $html = $this->get('users')->assertOk()->getContent();
 
-        $resp->assertOk();
-
-        $content = $resp->json('popoverContent');
-        $this->assertEqualsCanonicalizing(['id', 'email', 'created_at', 'name'], array_keys($content));
+        $this->assertSame(4, substr_count($html, '<template data-scope-form>'));
 
         // The number form carries the condition triggers the popover binds
-        $this->assertStringContainsString('data-trigger="[name=\'Filter[condition]\']"', $content['id']);
-        $this->assertStringContainsString('data-filter-action="apply"', $content['email']);
-        $this->assertStringContainsString('data-control="groupfilter"', $content['name']);
+        $this->assertStringContainsString('data-trigger="[name=\'Filter[condition]\']"', $html);
+        $this->assertStringContainsString('data-filter-action="apply"', $html);
+        $this->assertStringContainsString('data-control="groupfilter"', $html);
     }
 }

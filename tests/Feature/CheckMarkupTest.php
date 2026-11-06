@@ -79,7 +79,7 @@ class CheckMarkupTest extends TestCase
         $this->assertStringNotContainsString('form-check', $html);
     }
 
-    public function test_checkbox_and_switch_filter_scopes_render_small_checks_in_form_fields(): void
+    public function test_checkbox_and_switch_filter_scopes_render_as_filter_chips(): void
     {
         $filter = Filter::createIn(new UsersController, [
             'model' => new User,
@@ -100,8 +100,8 @@ class CheckMarkupTest extends TestCase
         $filter->bindToController();
         $html = (string) $filter->render();
 
-        $this->assertMatchesRegularExpression('/class="filter-scope scope-checkbox form-field"\s+data-scope-name="verified">\s*<input class="check check-sm" type="checkbox"/', $html);
-        $this->assertMatchesRegularExpression('/class="filter-scope form-field is-indeterminate"\s+data-scope-name="blocked">\s*<input class="check check-sm" type="checkbox"[^>]*data-checked="0"/', $html);
+        $this->assertMatchesRegularExpression('/class="filter-chip ">\s*<button[^>]*class="filter-scope scope-checkbox "[^>]*data-scope-name="verified"[^>]*>\s*<i class="ph ph-plus-circle filter-chip-icon"[^>]*><\/i>\s*<span class="filter-label">Verified<\/span>/', $html);
+        $this->assertMatchesRegularExpression('/class="filter-scope filter-chip scope-switch "[^>]*data-scope-name="blocked"[^>]*>\s*<button[^>]*class="combobox-toggle"[^>]*data-bs-toggle="combobox"/', $html);
         $this->assertStringNotContainsString('form-check', $html);
     }
 }

@@ -44,7 +44,7 @@ class MarkdownEditorTest extends TestCase
         $this->assertStringContainsString('data-safe-mode="true"', $html);
         $this->assertStringContainsString('placeholder="Describe the group"', $html);
         $this->assertStringContainsString('data-size="large"', $html);
-        $this->assertStringContainsString('data-toolbar-buttons="[{&quot;name&quot;:&quot;bold&quot;,&quot;title&quot;:&quot;Bold&quot;', $html);
+        $this->assertStringContainsString('data-toolbar-buttons="[{&quot;name&quot;:&quot;bold&quot;,&quot;icon&quot;:&quot;&lt;i class=\&quot;ph ph-text-b\&quot;', $html);
         $this->assertStringContainsString('&lt;i class=\&quot;ph ph-text-b\&quot;', $html);
         $this->assertStringContainsString('&quot;name&quot;:&quot;code&quot;', $html);
         $this->assertStringContainsString('&quot;|&quot;', $html);
