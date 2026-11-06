@@ -9,25 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      *
-     * Creates October Rain's file attachment tables, used by the file upload
-     * fields: files holds the attachments and deferred_bindings links them to
-     * records that have not been saved yet.
+     * Creates the files table the file upload fields store their uploads in.
+     * Each file names the record it belongs to through attachment_type and
+     * attachment_id, and the relation it fills through field, while an upload
+     * waiting for its record to save has no attachment_id yet.
      */
     public function up(): void
     {
-        Schema::create('deferred_bindings', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('master_type');
-            $table->string('master_field');
-            $table->string('slave_type');
-            $table->integer('slave_id');
-            $table->string('session_key');
-            $table->mediumText('pivot_data')->nullable();
-            $table->boolean('is_bind')->default(true);
-            $table->integer('sort_order')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
             $table->string('disk_name');
@@ -53,6 +41,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('files');
-        Schema::dropIfExists('deferred_bindings');
     }
 };

@@ -8,11 +8,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "larajax/larajax": "dev-main as 3.1.x-dev",
+        "larajax/larajax": "^3.0",
         "larajax/ui": "dev-main",
         "laravel/framework": "^13.8",
-        "laravel/tinker": "^3.0",
-        "october/rain": "4.x-dev as 4.4"
+        "laravel/tinker": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -73,6 +72,22 @@
         {
             "type": "vcs",
             "url": "https://github.com/larajax/larajax"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/octoberrain/contracts"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/octoberrain/exception"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/octoberrain/extension"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/octoberrain/html"
         }
     ],
     "extra": {

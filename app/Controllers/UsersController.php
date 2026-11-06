@@ -5,12 +5,12 @@ namespace App\Controllers;
 use App\Classes\ControllerBase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Larajax\Ui\Widgets\Filter;
 use Larajax\Ui\Widgets\Form;
 use Larajax\Ui\Widgets\Lists;
 use Larajax\Ui\Widgets\ListStructure;
 use Larajax\Ui\Widgets\Toolbar;
-use ValidationException;
 
 /**
  * Users controller.
@@ -61,7 +61,8 @@ class UsersController extends ControllerBase
             search: ['prompt' => 'Search users...'],
         );
 
-        // The top bar search submits here as ?q=
+        // The top bar search submits here as ?q=. The term must be set before
+        // the binding, which copies it onto the list.
         if (request()->filled('q')) {
             $toolbar->getSearchWidget()->setActiveTerm(request('q'));
         }
@@ -80,7 +81,7 @@ class UsersController extends ControllerBase
      */
     public function onDelete()
     {
-        $checkedIds = (array) input('checked');
+        $checkedIds = (array) request('checked');
 
         User::whereIn('id', $checkedIds)->get()->each->delete();
 
@@ -192,7 +193,7 @@ class UsersController extends ControllerBase
         $data = $this->formWidget->getSaveData();
 
         if (empty($data['name'])) {
-            throw new ValidationException(['name' => 'The name field is required.']);
+            throw ValidationException::withMessages(['name' => 'The name field is required.']);
         }
 
         // Never persist a blank password (the field is left empty to keep the
@@ -200,7 +201,7 @@ class UsersController extends ControllerBase
         if (empty($data['password'])) {
             unset($data['password'], $data['password_confirmation']);
         } elseif (($data['password'] ?? null) !== ($data['password_confirmation'] ?? null)) {
-            throw new ValidationException(['password_confirmation' => 'The passwords do not match.']);
+            throw ValidationException::withMessages(['password_confirmation' => 'The passwords do not match.']);
         }
 
         // The relation fields submit under their relation names: "primary_group"

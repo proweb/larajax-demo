@@ -42,7 +42,7 @@ class CoursesController extends ControllerBase
 
     public function onDelete()
     {
-        foreach ((array) input('checked') as $id) {
+        foreach ((array) request('checked') as $id) {
             $course = Course::find((int) $id);
             if ($course) {
                 $course->delete();

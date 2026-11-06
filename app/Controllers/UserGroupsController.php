@@ -4,10 +4,10 @@ namespace App\Controllers;
 
 use App\Classes\ControllerBase;
 use App\Models\UserGroup;
+use Illuminate\Validation\ValidationException;
 use Larajax\Ui\Widgets\Form;
 use Larajax\Ui\Widgets\Lists;
 use Larajax\Ui\Widgets\Toolbar;
-use ValidationException;
 
 /**
  * User groups controller.
@@ -52,7 +52,7 @@ class UserGroupsController extends ControllerBase
      */
     public function onLoadPopupForm()
     {
-        $group = UserGroup::findOrFail(input('form_record_id'));
+        $group = UserGroup::findOrFail(request('form_record_id'));
 
         $this->formWidget = $this->makeForm($group, 'update');
 
@@ -67,7 +67,7 @@ class UserGroupsController extends ControllerBase
      */
     public function onSavePopupForm()
     {
-        $group = UserGroup::findOrFail(input('form_record_id'));
+        $group = UserGroup::findOrFail(request('form_record_id'));
 
         $this->formWidget = $this->makeForm($group, 'update');
 
@@ -161,7 +161,7 @@ class UserGroupsController extends ControllerBase
         $data = $this->formWidget->getSaveData();
 
         if (empty($data['name'])) {
-            throw new ValidationException(['name' => 'The name field is required.']);
+            throw ValidationException::withMessages(['name' => 'The name field is required.']);
         }
 
         // The members field submits related user ids, synced once the group exists
@@ -169,8 +169,8 @@ class UserGroupsController extends ControllerBase
         $members = ($data['users'] ?? null) ?: [];
         unset($data['users']);
 
-        // The session key commits the file changes the upload fields deferred, such as a removed document
-        $group->fill($data)->save(null, $this->formWidget->getSessionKey());
+        // The upload fields commit their held file changes when the record saves
+        $group->fill($data)->save();
 
         if ($hasMembers) {
             $group->users()->sync($members);
