@@ -24,3 +24,6 @@ _ide_helper_models.php
 .DS_Store
 .claude
 Thumbs.db
+
+# local agent state
+.pi/
